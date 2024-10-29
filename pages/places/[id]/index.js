@@ -33,11 +33,9 @@ export default function DetailsPage() {
   const router = useRouter();
   const { isReady } = router;
   const { id } = router.query;
-  const {
-    data: { place, comments } = {},
-    isLoading,
-    error,
-  } = useSWR(`/api/places/${id}`);
+  const { data, isLoading, error } = useSWR(`/api/places/${id}`);
+
+  const place = data;
 
   if (!isReady || isLoading || error) return <h2>Loading...</h2>;
 
@@ -47,7 +45,7 @@ export default function DetailsPage() {
 
   return (
     <>
-      <Link href={'/'} passHref legacyBehavior>
+      <Link href={"/"} passHref legacyBehavior>
         <StyledLink justifySelf="start">back</StyledLink>
       </Link>
       <ImageContainer>
@@ -76,7 +74,7 @@ export default function DetailsPage() {
           Delete
         </StyledButton>
       </ButtonContainer>
-      <Comments locationName={place.name} comments={comments} />
+      <Comments locationName={place.name} /* comments={comments} */ />
     </>
   );
 }

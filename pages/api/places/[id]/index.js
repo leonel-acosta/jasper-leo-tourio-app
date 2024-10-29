@@ -13,9 +13,9 @@ export default async function handler(request, response) {
    */
   const { id } = request.query;
 
-  if (!id) {
+  /*   if (!id) {
     return response.status(400).json({ error: "ID is required" });
-  }
+  } */
 
   if (request.method === "GET") {
     try {

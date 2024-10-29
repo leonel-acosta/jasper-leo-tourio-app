@@ -1,23 +1,46 @@
-import { db_places } from "../../../../lib/db_places";
-import { db_comments } from "../../../../lib/db_comments";
+import dbConnect from "../../../../db/connect";
+import Place from "../../../../db/models/Place";
 
-export default function handler(request, response) {
+export default async function handler(request, response) {
+  try {
+    await dbConnect();
+    console.log("DB connected ID");
+  } catch (error) {
+    console.log("DB CONNECTION ERROR ID");
+  }
+
+  /*   await dbConnect();
+   */
   const { id } = request.query;
 
   if (!id) {
-    return;
+    return response.status(400).json({ error: "ID is required" });
   }
 
-  const place = db_places.find((place) => place._id.$oid === id);
-  const comment = place?.comments;
+  if (request.method === "GET") {
+    try {
+      const place = await Place.findById(id);
+
+      if (!place) {
+        return response.status(404).json({ status: "Not Found" });
+      }
+
+      return response.status(200).json(place);
+    } catch (error) {
+      console.error("Error fetching place:", error);
+      return response
+        .status(500)
+        .json({ error: "Internal server Error fetching place" });
+    }
+  }
+
+  /*   const place = Place.find((place) => place._id.$oid === id);
+   */
+  /*   const comment = place?.comments;
   const allCommentIds = comment?.map((comment) => comment.$oid) || [];
   const comments = db_comments.filter((comment) =>
     allCommentIds.includes(comment._id.$oid)
   );
-
-  if (!place) {
-    return response.status(404).json({ status: "Not found" });
-  }
-
-  response.status(200).json({ place: place, comments: comments });
+ */
+  response.status(200).json();
 }

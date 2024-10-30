@@ -9,13 +9,7 @@ export default async function handler(request, response) {
     console.log("DB CONNECTION ERROR ID");
   }
 
-  /*   await dbConnect();
-   */
   const { id } = request.query;
-
-  /*   if (!id) {
-    return response.status(400).json({ error: "ID is required" });
-  } */
 
   if (request.method === "GET") {
     try {
@@ -36,18 +30,8 @@ export default async function handler(request, response) {
 
   if (request.method === "DELETE") {
     await Place.findByIdAndDelete(id);
-    // Declare jokeToDelete to be the joke identified by its id and delete it.
-    // This line handles the entire deletion process.
     response.status(200).json({ status: `Place ${id} successfully deleted.` });
   }
 
-  /*   const place = Place.find((place) => place._id.$oid === id);
-   */
-  /*   const comment = place?.comments;
-  const allCommentIds = comment?.map((comment) => comment.$oid) || [];
-  const comments = db_comments.filter((comment) =>
-    allCommentIds.includes(comment._id.$oid)
-  );
- */
   response.status(200).json();
 }

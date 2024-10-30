@@ -34,6 +34,13 @@ export default async function handler(request, response) {
     }
   }
 
+  if (request.method === "DELETE") {
+    await Place.findByIdAndDelete(id);
+    // Declare jokeToDelete to be the joke identified by its id and delete it.
+    // This line handles the entire deletion process.
+    response.status(200).json({ status: `Place ${id} successfully deleted.` });
+  }
+
   /*   const place = Place.find((place) => place._id.$oid === id);
    */
   /*   const comment = place?.comments;

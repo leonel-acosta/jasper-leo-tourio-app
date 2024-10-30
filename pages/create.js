@@ -26,7 +26,6 @@ export default function CreatePlacePage() {
       mutate();
       console.log("Place added:", place);
       router.push("/");
-      console.log("done");
     } else {
       console.error("Failed to add place");
     }

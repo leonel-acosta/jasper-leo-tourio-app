@@ -15,6 +15,7 @@ export default async function handler(request, response) {
       const places = await Place.find();
       return response.status(200).json(places);
     } catch (error) {
+      console.log(error);
       return response.status(500).json({ error: "Internal Server Error" });
     }
   }

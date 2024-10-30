@@ -10,14 +10,23 @@ export default async function handler(request, response) {
     return response.satus(500).json({ error: "Database connection failed" });
   }
 
-  try {
-    if (request.method === "GET") {
+  if (request.method === "GET") {
+    try {
       const places = await Place.find();
       return response.status(200).json(places);
-    } else {
-      return response.status(404).json({ status: "Not Found" });
+    } catch (error) {
+      return response.status(500).json({ error: "Internal Server Error" });
     }
-  } catch (error) {
-    return response.satus(500).json({ error: "Internal Server Error" });
+  }
+
+  if (request.method === "POST") {
+    try {
+      const placeData = request.body;
+      await Place.create(placeData);
+      response.status(201).json({ status: "Place created" });
+    } catch (error) {
+      console.log(error);
+      response.status(400).json({ error: error.message });
+    }
   }
 }

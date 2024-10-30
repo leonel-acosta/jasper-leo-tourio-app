@@ -33,6 +33,7 @@ export default function DetailsPage() {
   const router = useRouter();
   const { isReady } = router;
   const { id } = router.query;
+
   const { data, isLoading, error } = useSWR(`/api/places/${id}`);
 
   const place = data;
@@ -44,6 +45,12 @@ export default function DetailsPage() {
       method: "DELETE",
     });
     router.push("/");
+  }
+
+  async function onAddComment() {
+    await fetch(`/api/places/${id}`, {
+      method: "POST",
+    });
   }
 
   return (
@@ -77,7 +84,11 @@ export default function DetailsPage() {
           Delete
         </StyledButton>
       </ButtonContainer>
-      <Comments locationName={place.name} /* comments={comments} */ />
+      <Comments
+        locationName={place.name}
+        onSubmit={onAddComment}
+        comments={place.comments}
+      />
     </>
   );
 }

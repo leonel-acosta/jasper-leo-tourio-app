@@ -1,6 +1,8 @@
 import styled from "styled-components";
 import { FormContainer, Input, Label } from "./Form";
 import { StyledButton } from "./StyledButton.js";
+import useSWR from "swr";
+import { useRouter } from "next/router.js";
 
 export default function Comments({ locationName, comments, onSubmit }) {
   const Article = styled.article`
@@ -17,7 +19,10 @@ export default function Comments({ locationName, comments, onSubmit }) {
     }
   `;
 
-  function handleSubmitComment(event) {
+  const router = useRouter();
+  const { mutate } = useSWR("/api/places");
+
+  async function handleSubmitComment(event) {
     event.preventDefault();
     const formData = new FormData(event.target);
     const data = Object.fromEntries(formData);
@@ -26,7 +31,7 @@ export default function Comments({ locationName, comments, onSubmit }) {
 
   return (
     <Article>
-      <FormContainer onSubmit={handleSubmitComment}>
+      <FormContainer onSubmit={onSubmit}>
         <Label htmlFor="name">Your Name</Label>
         <Input type="text" name="name" placeholder="name" />
         <Label htmlFor="comment">Your Comment</Label>

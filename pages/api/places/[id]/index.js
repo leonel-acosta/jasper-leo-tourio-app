@@ -1,5 +1,6 @@
 import dbConnect from "../../../../db/connect";
 import Place from "../../../../db/models/Place";
+import Comments from "../../../../components/Comments";
 
 export default async function handler(request, response) {
   try {
@@ -64,6 +65,13 @@ export default async function handler(request, response) {
     await Place.findByIdAndDelete(id);
     response.status(200).json({ status: `Place ${id} successfully deleted.` });
   }
+
+  const place = Place.find((place) => place._id.$oid === id);
+  const comment = place?.comments;
+  const allCommentIds = comment?.map((comment) => comment.$oid) || [];
+  const comments = db_comments.filter((comment) =>
+    allCommentIds.includes(comment._id.$oid)
+  );
 
   response.status(200).json();
 }

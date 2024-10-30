@@ -1,6 +1,8 @@
 import styled from "styled-components";
 import { FormContainer, Input, Label } from "./Form";
 import { StyledButton } from "./StyledButton.js";
+import useSWR from "swr";
+import { useRouter } from "next/router.js";
 
 export default function Comments({ locationName, comments, onSubmit }) {
   const Article = styled.article`
@@ -17,16 +19,16 @@ export default function Comments({ locationName, comments, onSubmit }) {
     }
   `;
 
-  function handleSubmitComment(event) {
-    event.preventDefault();
+  function handleAddComment(event) {
     const formData = new FormData(event.target);
-    const data = Object.fromEntries(formData);
-    console.log(data);
+    const newComment = Object.fromEntries(formData);
+    console.log(newComment);
+    onSubmit(newComment);
   }
 
   return (
     <Article>
-      <FormContainer onSubmit={handleSubmitComment}>
+      <FormContainer onSubmit={handleAddComment}>
         <Label htmlFor="name">Your Name</Label>
         <Input type="text" name="name" placeholder="name" />
         <Label htmlFor="comment">Your Comment</Label>

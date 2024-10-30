@@ -31,10 +31,12 @@ const StyledLocationLink = styled(StyledLink)`
 
 export default function DetailsPage() {
   const router = useRouter();
+  const { mutate } = useSWR("/api/places");
+
   const { isReady } = router;
   const { id } = router.query;
-  const { data, isLoading, error } = useSWR(`/api/places/${id}`);
 
+  const { data, isLoading, error } = useSWR(`/api/places/${id}`);
   const place = data;
 
   if (!isReady || isLoading || error) return <h2>Loading...</h2>;
@@ -44,6 +46,23 @@ export default function DetailsPage() {
       method: "DELETE",
     });
     router.push("/");
+  }
+
+  async function addComment(comment) {
+    const response = await fetch(`/api/places/${id}`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(comment),
+    });
+
+    if (response.ok) {
+      mutate();
+      console.log("Comment added:", comment);
+    } else {
+      console.error("Failed to add comment");
+    }
   }
 
   return (
@@ -77,7 +96,11 @@ export default function DetailsPage() {
           Delete
         </StyledButton>
       </ButtonContainer>
-      <Comments locationName={place.name} /* comments={comments} */ />
+      <Comments
+        locationName={place.name}
+        onSubmit={addComment}
+        comments={place.comments}
+      />
     </>
   );
 }

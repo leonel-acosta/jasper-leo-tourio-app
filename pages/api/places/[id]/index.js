@@ -1,6 +1,6 @@
 import dbConnect from "../../../../db/connect";
 import Place from "../../../../db/models/Place";
-import Comments from "../../../../components/Comments";
+import Comment from "../../../../db/models/Comment";
 
 export default async function handler(request, response) {
   try {
@@ -8,6 +8,7 @@ export default async function handler(request, response) {
     console.log("DB connected ID");
   } catch (error) {
     console.log("DB CONNECTION ERROR ID");
+    return response.status(500).json({ error: "Database connection failed" });
   }
 
   const { id } = request.query;
@@ -34,7 +35,7 @@ export default async function handler(request, response) {
 
   if (request.method === "GET") {
     try {
-      const place = await Place.findById(id);
+      const place = await Place.findById(id).populate("comments");
 
       if (!place) {
         return response.status(404).json({ status: "Not Found" });
@@ -51,13 +52,17 @@ export default async function handler(request, response) {
 
   if (request.method === "POST") {
     try {
-      const placeData = request.body;
-      await Place.create(placeData);
+      const commentData = request.body;
+      const comment = await Comment.create(commentData);
+      const place = await Place.findById(id);
 
-      return response.status(201).json({ status: "Place created" });
+      place.comments.push(comment._id);
+      await place.save();
+
+      return response.status(201).json({ status: "Comment created" });
     } catch (error) {
-      console.log(error);
-      response.status(400).json({ error: error.message });
+      console.error("Error in places-id");
+      return response.status(400).json({ error: error.message });
     }
   }
 

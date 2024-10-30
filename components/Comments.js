@@ -19,19 +19,16 @@ export default function Comments({ locationName, comments, onSubmit }) {
     }
   `;
 
-  const router = useRouter();
-  const { mutate } = useSWR("/api/places");
-
-  async function handleSubmitComment(event) {
-    event.preventDefault();
+  function handleAddComment(event) {
     const formData = new FormData(event.target);
-    const data = Object.fromEntries(formData);
-    console.log(data);
+    const newComment = Object.fromEntries(formData);
+    console.log(newComment);
+    onSubmit(newComment);
   }
 
   return (
     <Article>
-      <FormContainer onSubmit={onSubmit}>
+      <FormContainer onSubmit={handleAddComment}>
         <Label htmlFor="name">Your Name</Label>
         <Input type="text" name="name" placeholder="name" />
         <Label htmlFor="comment">Your Comment</Label>

@@ -2,8 +2,13 @@
   "/_app": "pages/_app.js",
   "/_error": "pages/_error.js",
   "/_document": "pages/_document.js",
+  "/api/places": "pages/api/places.js",
   "/": "pages/index.js",
+<<<<<<< HEAD
+  "/create": "pages/create.js"
+=======
   "/places/[id]": "pages/places/[id].js",
   "/api/places": "pages/api/places.js",
   "/api/places/[id]": "pages/api/places/[id].js"
+>>>>>>> main
 }

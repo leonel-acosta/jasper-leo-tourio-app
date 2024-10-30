@@ -34,6 +34,18 @@ export default async function handler(request, response) {
     }
   }
 
+  if (request.method === "POST") {
+    try {
+      const placeData = request.body;
+      await Place.create(placeData);
+
+      return response.status(201).json({ status: "Place created" });
+    } catch (error) {
+      console.log(error);
+      response.status(400).json({ error: error.message });
+    }
+  }
+
   /*   const place = Place.find((place) => place._id.$oid === id);
    */
   /*   const comment = place?.comments;

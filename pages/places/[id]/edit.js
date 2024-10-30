@@ -10,8 +10,25 @@ export default function EditPage() {
   const { id } = router.query;
   const { data: place, isLoading, error } = useSWR(`/api/places/${id}`);
 
-  async function editPlace(place) {
-    console.log("Place edited (but not really...)");
+  async function editPlace(updatedPlace) {
+    try {
+      const response = await fetch(`/api/places/${id}`, {
+        method: "PATCH",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(updatedPlace),
+      });
+
+      if (response.ok) {
+        console.log("Place successfully updated");
+        router.push(`/places/${id}`);
+      } else {
+        console.error("Failed to update place");
+      }
+    } catch (error) {
+      console.error("Error updating place:", error);
+    }
   }
 
   if (!isReady || isLoading || error) return <h2>Loading...</h2>;
